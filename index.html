@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON Database Example</title>
+</head>
+<body>
+    <h1>JSON Database Example</h1>
+    <form id="dataForm">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+        <label for="age">Age:</label>
+        <input type="number" id="age" name="age" required>
+        <button type="submit">Add</button>
+    </form>
+
+    <h2>Data List</h2>
+    <ul id="dataList"></ul>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('dataForm');
+            const dataList = document.getElementById('dataList');
+
+            // Load data from localStorage
+            function loadData() {
+                const storedData = localStorage.getItem('jsonData');
+                return storedData ? JSON.parse(storedData) : [];
+            }
+
+            // Save data to localStorage
+            function saveData(data) {
+                localStorage.setItem('jsonData', JSON.stringify(data));
+            }
+
+            // Display data
+            function displayData(data) {
+                dataList.innerHTML = '';
+                data.forEach(item => {
+                    const li = document.createElement('li');
+                    li.textContent = `Name: ${item.name}, Age: ${item.age}`;
+                    dataList.appendChild(li);
+                });
+            }
+
+            // Add data to localStorage
+            form.addEventListener('submit', (event) => {
+                event.preventDefault();
+                const name = form.name.value;
+                const age = form.age.value;
+
+                const data = loadData();
+                data.push({ name, age });
+                saveData(data);
+                displayData(data);
+                form.reset();
+            });
+
+            // Initial load and display
+            const data = loadData();
+            displayData(data);
+        });
+    </script>
+</body>
+</html>
